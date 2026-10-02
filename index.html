@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>ORDEM NEON ASTERION</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="game-shell">
+      <canvas id="gameCanvas" width="1280" height="720"></canvas>
+
+      <div id="hud" class="hud hidden">
+        <div class="hud-top">
+          <div class="character-panel">
+            <div id="portrait" class="portrait">K</div>
+            <div class="character-text">
+              <div id="charName" class="char-name">KAEL</div>
+              <div id="charTitle" class="char-title">Líder da Vanguarda</div>
+            </div>
+          </div>
+          <div class="mission-box">
+            <div id="missionName">ESTAÇÃO ABANDONADA</div>
+          </div>
+          <div class="stats-box">
+            <div class="stat-row">
+              <span>ALVO</span>
+              <span id="enemyCount">0</span>
+            </div>
+            <div class="stat-row">
+              <span>DERROTADOS</span>
+              <span id="kills">0</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bars-panel">
+          <div class="meter-block">
+            <div class="meter-label-row">
+              <span>VIDA</span>
+              <span id="healthText">100 / 100</span>
+            </div>
+            <div class="meter"><div id="healthBar" class="fill life"></div></div>
+          </div>
+          <div class="meter-block">
+            <div class="meter-label-row">
+              <span>ENERGIA</span>
+              <span id="energyText">100 / 100</span>
+            </div>
+            <div class="meter"><div id="energyBar" class="fill energy"></div></div>
+          </div>
+        </div>
+
+        <div class="ability-panel">
+          <div class="ability-card">
+            <span>ESPECIAL</span>
+            <strong id="specialName">AURA DOURADA</strong>
+            <small id="specialCooldownText">Pronto</small>
+          </div>
+          <div class="ability-card">
+            <span>SECUNDÁRIA</span>
+            <strong id="secondaryName">DASH</strong>
+            <small id="secondaryCooldownText">Pronto</small>
+          </div>
+        </div>
+      </div>
+
+      <div id="messageBox" class="message-box hidden"></div>
+      <div id="dialogueBox" class="dialogue-box hidden"></div>
+
+      <div id="mainMenu" class="overlay active">
+        <div class="menu-panel">
+          <div class="title-block">
+            <div class="small-tag">SEÇÃO 01</div>
+            <h1>ORDEM NEON ASTERION</h1>
+          </div>
+          <div class="menu-buttons">
+            <button data-action="new-game">NOVO JOGO</button>
+            <button data-action="continue">CONTINUAR</button>
+            <button data-action="characters">PERSONAGENS</button>
+            <button data-action="controls">CONTROLES</button>
+            <button data-action="settings">CONFIGURAÇÕES</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="pauseOverlay" class="overlay hidden">
+        <div class="menu-panel compact">
+          <div class="small-tag">PAUSADO</div>
+          <h2>PAUSADO</h2>
+          <div class="menu-buttons small">
+            <button data-action="resume">CONTINUAR</button>
+            <button data-action="restart-level">REINICIAR FASE</button>
+            <button data-action="controls">CONTROLES</button>
+            <button data-action="menu">MENU PRINCIPAL</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="resultOverlay" class="overlay hidden">
+        <div class="menu-panel compact">
+          <div class="small-tag">MISSÃO</div>
+          <h2 id="resultTitle">MISSÃO CONCLUÍDA</h2>
+          <div id="resultText" class="result-text"></div>
+          <div class="menu-buttons small">
+            <button id="resultPrimaryBtn" data-action="next-scene">CONTINUAR</button>
+            <button data-action="menu">MENU PRINCIPAL</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="touchControls" class="touch-controls hidden">
+        <div class="touch-row left">
+          <button data-touch="left">←</button>
+          <button data-touch="right">→</button>
+        </div>
+        <div class="touch-row right">
+          <button data-touch="jump">PULAR</button>
+          <button data-touch="attack">ATAQUE</button>
+          <button data-touch="special">ESPECIAL</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="data/characters.js"></script>
+    <script src="data/enemies.js"></script>
+    <script src="data/story.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/save.js"></script>
+    <script src="js/effects.js"></script>
+    <script src="js/combat.js"></script>
+    <script src="js/dialogue.js"></script>
+    <script src="js/ai.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/enemies.js"></script>
+    <script src="js/bosses.js"></script>
+    <script src="js/levels.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>
