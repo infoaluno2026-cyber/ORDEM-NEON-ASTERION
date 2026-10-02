@@ -50,7 +50,7 @@ class Player {
     this.spritePath = 'assets/sprites/' + this.id + '.png';
     this.dashSprite = null;
     this.dashSpriteLoaded = false;
-    this.dashSpritePath = 'assets/sprites/' + this.id + '-dash.png';
+    this.dashSpritePath = 'assets/sprites/' + this.id + '-dash.gif';
     this.loadSprite();
     this.loadDashSprite();
   }
