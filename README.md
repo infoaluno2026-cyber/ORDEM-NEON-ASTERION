@@ -30,24 +30,27 @@ git remote add origin https://github.com/SEU_USUARIO/ORDEM-NEON-ASTERION.git
 git push -u origin main
 ```
 
-## Como ativar o GitHub Pages
+## Publicação no GitHub Pages
 
-1. Abra o repositório no GitHub.
-2. Acesse `Settings` > `Pages`.
-3. Em `Build and deployment`, selecione a branch `main` e a pasta `/`.
-4. Salve.
-5. A URL pública será algo como:
+O workflow `.github/workflows/deploy-pages.yml` publica automaticamente o conteúdo da raiz do projeto a cada push para a branch `main`. Para ativar:
+
+1. Envie o workflow para o GitHub na branch `main`.
+2. No repositório, acesse `Settings` > `Pages`.
+3. Em `Build and deployment`, escolha `GitHub Actions` como origem.
+4. Aguarde a execução de `Deploy GitHub Pages` terminar com sucesso.
+
+A URL pública será:
 
 ```text
-https://SEU_USUARIO.github.io/ORDEM-NEON-ASTERION/
+https://infoaluno2026-cyber.github.io/ORDEM-NEON-ASTERION/
 ```
 
 ## Como atualizar o jogo
 
 1. Edite os arquivos do projeto.
 2. Teste em um navegador local.
-3. Faça commit e push para a branch principal.
-4. O GitHub Pages publica automaticamente.
+3. Faça commit e push para a branch `main`.
+4. O workflow do GitHub Pages publica a nova versão automaticamente.
 
 ## Controles
 

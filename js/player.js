@@ -44,14 +44,19 @@ class Player {
     this.hurtFlash = 0;
     this.secondaryActive = 0;
     this.attackSwing = 0;
+    this.attackSwingDuration = 0.6;
     this.input = { left: false, right: false, jump: false, attack: false, special: false, secondary: false };
     this.sprite = null;
     this.spriteLoaded = false;
     this.spritePath = 'assets/sprites/' + this.id + '.png';
+    this.attackSprite = null;
+    this.attackSpriteLoaded = false;
+    this.attackSpritePath = 'assets/sprites/' + this.id + '-attack.png';
     this.dashSprite = null;
     this.dashSpriteLoaded = false;
-    this.dashSpritePath = 'assets/sprites/' + this.id + '-dash.gif';
+    this.dashSpritePath = 'assets/sprites/' + this.id + '-dash.png';
     this.loadSprite();
+    this.loadAttackSprite();
     this.loadDashSprite();
   }
 
@@ -66,6 +71,22 @@ class Player {
       this.spriteLoaded = false;
     };
     image.src = this.spritePath;
+  }
+
+  loadAttackSprite() {
+    if (this.id !== 'kael') return;
+
+    const image = new Image();
+    image.onload = () => {
+      this.attackSprite = image;
+      this.attackSpriteLoaded = true;
+    };
+    image.onerror = () => {
+      console.error('Falha ao carregar o sprite de ataque:', this.attackSpritePath);
+      this.attackSprite = null;
+      this.attackSpriteLoaded = false;
+    };
+    image.src = this.attackSpritePath;
   }
 
   loadDashSprite() {
@@ -85,7 +106,7 @@ class Player {
     this.input = input;
   }
 
-  update(dt, level) {
+  update(dt, level, enemies = []) {
     if (!this.alive) return;
 
     this.attackCooldown = Math.max(0, this.attackCooldown - dt);
@@ -137,7 +158,7 @@ class Player {
     if (moveDir !== 0) this.facing = moveDir > 0 ? 1 : -1;
 
     if (this.input.attack && this.attackCooldown <= 0) {
-      this.performAttack();
+      this.performAttack(enemies);
       this.input.attack = false;
     }
 
@@ -161,7 +182,7 @@ class Player {
   performAttack(enemies = []) {
     this.attackCooldown = this.attackCooldownConfig;
     this.energy = Math.min(this.maxEnergy, this.energy + 8);
-    this.attackSwing = 0.2;
+    this.attackSwing = this.attackSwingDuration;
 
     const range = this.attackRange;
     const attackX = this.x + this.facing * (range * 0.7);
@@ -294,14 +315,39 @@ class Player {
   }
 
   drawHeroSprite(ctx) {
-    if (this.id === 'kael' && this.dashTimer > 0 && this.dashSpriteLoaded && this.dashSprite) {
+    const showingAttack = this.attackSwing > 0;
+
+    if (!showingAttack && this.id === 'kael' && this.dashTimer > 0 && this.dashSpriteLoaded && this.dashSprite) {
+      const width = 250;
+      const height = width * (this.dashSprite.naturalHeight / this.dashSprite.naturalWidth);
       ctx.save();
       ctx.translate(this.x, this.y);
       if (this.facing < 0) {
         ctx.scale(-1, 1);
       }
-      ctx.drawImage(this.dashSprite, -110, -100, 220, 220);
+      ctx.drawImage(this.dashSprite, -width / 2, -height, width, height);
       ctx.restore();
+      return;
+    }
+
+    if (showingAttack && this.attackSpriteLoaded && this.attackSprite) {
+      const progress = Math.min(1, 1 - this.attackSwing / this.attackSwingDuration);
+      const scale = 0.78 + Math.sin(progress * Math.PI) * 0.28;
+      const width = 220 * scale;
+      const height = 193 * scale;
+      ctx.save();
+      ctx.translate(this.x + this.facing * progress * 16, this.y);
+      if (this.facing < 0) {
+        ctx.scale(-1, 1);
+      }
+      ctx.rotate(this.facing * Math.sin(progress * Math.PI) * 0.06);
+      ctx.globalAlpha = Math.min(1, this.attackSwing / 0.12);
+      ctx.shadowColor = this.accent;
+      ctx.shadowBlur = 24;
+      ctx.drawImage(this.attackSprite, -width / 2, -height + 25, width, height);
+      ctx.restore();
+      this.drawAttackAnimation(ctx);
+      return;
     }
 
     if (this.spriteLoaded && this.sprite && this.sprite.complete) {
@@ -312,6 +358,7 @@ class Player {
       }
       ctx.drawImage(this.sprite, -64, -120, 128, 128);
       ctx.restore();
+      this.drawAttackAnimation(ctx);
       return;
     }
 
@@ -440,17 +487,52 @@ class Player {
     ctx.fillRect(-26, -26, 8, 18);
     ctx.fillRect(18, -26, 8, 18);
 
-    if (this.attackSwing > 0) {
-      ctx.strokeStyle = '#fff7c4';
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.moveTo(38, 18);
-      ctx.lineTo(104, 8);
-      ctx.stroke();
-      ctx.fillStyle = 'rgba(255,255,200,0.4)';
-      ctx.fillRect(88, 2, 18, 10);
-    }
+    ctx.restore();
+    this.drawAttackAnimation(ctx);
+  }
 
+  drawAttackAnimation(ctx) {
+    if (this.attackSwing <= 0) return;
+
+    const progress = Math.min(1, 1 - this.attackSwing / this.attackSwingDuration);
+    const alpha = Math.max(0, 1 - progress * 0.75);
+    const reach = 36 + progress * 52;
+    const angle = this.facing > 0 ? -0.7 + progress * 1.6 : Math.PI + 0.7 - progress * 1.6;
+
+    ctx.save();
+    ctx.translate(this.x + this.facing * (24 + progress * 16), this.y - 18);
+    ctx.rotate(angle);
+
+    ctx.globalAlpha = alpha * 0.45;
+    ctx.strokeStyle = this.accent;
+    ctx.lineWidth = this.id === 'kael' ? 28 : 18;
+    ctx.shadowColor = this.accent;
+    ctx.shadowBlur = 34;
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(reach, 0);
+    ctx.stroke();
+
+    ctx.globalAlpha = alpha;
+    ctx.strokeStyle = this.id === 'kael' ? '#fff3bf' : '#ffffff';
+    ctx.lineWidth = this.id === 'kael' ? 10 : 7;
+    ctx.shadowBlur = 18;
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(reach, 0);
+    ctx.stroke();
+
+    ctx.lineWidth = this.id === 'kael' ? 5 : 3;
+    ctx.strokeStyle = this.accent;
+    ctx.beginPath();
+    ctx.moveTo(reach * 0.35, 0);
+    ctx.lineTo(reach + 10, 0);
+    ctx.stroke();
+
+    ctx.fillStyle = '#fff7c4';
+    ctx.beginPath();
+    ctx.arc(reach, 0, this.id === 'kael' ? 5 : 3, 0, Math.PI * 2);
+    ctx.fill();
     ctx.restore();
   }
 
@@ -486,15 +568,8 @@ class Player {
     ctx.fillStyle = '#dfeaff';
     ctx.fillRect(this.facing > 0 ? 8 : -22, 8, 16, 6);
 
-    if (this.attackSwing > 0) {
-      ctx.strokeStyle = this.accent;
-      ctx.lineWidth = 5;
-      ctx.beginPath();
-      ctx.arc(this.facing > 0 ? 14 : -14, 0, 26, this.facing > 0 ? -1.2 : 1.2, this.facing > 0 ? 1.2 : -1.2);
-      ctx.stroke();
-    }
-
     ctx.restore();
+    this.drawAttackAnimation(ctx);
   }
 }
 

@@ -288,7 +288,7 @@ class Game {
     };
 
     this.player.setInput(mergedInput);
-    this.player.update(dt, this.currentLevel);
+    this.player.update(dt, this.currentLevel, this.enemies);
 
     for (const ally of this.allies) {
       ally.setInput({ left: false, right: false, jump: false, attack: false, special: false, secondary: false });
