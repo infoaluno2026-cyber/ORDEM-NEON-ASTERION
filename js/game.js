@@ -10,7 +10,7 @@ class Game {
     this.backgroundImage.onerror = () => {
       console.error('Falha ao carregar a imagem de fundo:', this.backgroundImage.src);
     };
-    this.backgroundImage.src = 'assets/backgrounds/asterion-city.png';
+    this.backgroundImage.src = 'assets/backgrounds/asterion-city.png?v=asterion-background-1';
     this.state = 'menu';
     this.ui = new window.ORDEM.UI();
     this.dialogue = new window.ORDEM.Dialogue();
@@ -355,7 +355,7 @@ class Game {
     const level = this.currentLevel || window.ORDEM.LEVELS.station;
     const baseY = level.groundY || 620;
 
-    this.ctx.fillStyle = '#0b1124';
+    this.ctx.fillStyle = 'rgba(11, 17, 36, 0.42)';
     this.ctx.fillRect(0, baseY, this.width, this.height - baseY);
 
     for (const platform of level.platforms || []) {
@@ -424,7 +424,7 @@ class Game {
       const width = this.backgroundImage.naturalWidth * scale;
       const height = this.backgroundImage.naturalHeight * scale;
       this.ctx.drawImage(this.backgroundImage, (this.width - width) / 2, (this.height - height) / 2, width, height);
-      this.ctx.fillStyle = 'rgba(4, 8, 20, 0.12)';
+      this.ctx.fillStyle = 'rgba(4, 8, 20, 0.06)';
       this.ctx.fillRect(0, 0, this.width, this.height);
       return;
     }
