@@ -44,7 +44,7 @@ class Player {
     this.hurtFlash = 0;
     this.secondaryActive = 0;
     this.attackSwing = 0;
-    this.attackSwingDuration = 0.6;
+    this.attackSwingDuration = 0.42;
     this.input = { left: false, right: false, jump: false, attack: false, special: false, secondary: false };
     this.sprite = null;
     this.spriteLoaded = false;
@@ -208,7 +208,6 @@ class Player {
 
     if (this.id === 'kael') {
       this.attackDamage = 18;
-      this.attackSwing = 0.5;
       this.performAttack(window.ORDEM.game.enemies || []);
       this.attackDamage = this.config.attackDamage;
       return;
@@ -332,16 +331,42 @@ class Player {
 
     if (showingAttack && this.attackSpriteLoaded && this.attackSprite) {
       const progress = Math.min(1, 1 - this.attackSwing / this.attackSwingDuration);
-      const scale = 0.78 + Math.sin(progress * Math.PI) * 0.28;
+      let offsetX;
+      let offsetY;
+      let rotation;
+      let scale;
+
+      if (progress < 0.2) {
+        const preparation = progress / 0.2;
+        offsetX = -12 * preparation;
+        offsetY = 8 * preparation;
+        rotation = -0.12 * preparation;
+        scale = 0.82 + preparation * 0.08;
+      } else if (progress < 0.58) {
+        const strike = (progress - 0.2) / 0.38;
+        const easedStrike = strike * strike * (3 - 2 * strike);
+        offsetX = -12 + 48 * easedStrike;
+        offsetY = 8 - 18 * easedStrike;
+        rotation = -0.12 + 0.28 * easedStrike;
+        scale = 0.9 + 0.17 * easedStrike;
+      } else {
+        const recovery = (progress - 0.58) / 0.42;
+        const easedRecovery = recovery * recovery * (3 - 2 * recovery);
+        offsetX = 36 * (1 - easedRecovery);
+        offsetY = -10 * (1 - easedRecovery);
+        rotation = 0.16 * (1 - easedRecovery);
+        scale = 1.07 - 0.15 * easedRecovery;
+      }
+
       const width = 220 * scale;
       const height = 193 * scale;
       ctx.save();
-      ctx.translate(this.x + this.facing * progress * 16, this.y);
+      ctx.translate(this.x + this.facing * offsetX, this.y + offsetY);
       if (this.facing < 0) {
         ctx.scale(-1, 1);
       }
-      ctx.rotate(this.facing * Math.sin(progress * Math.PI) * 0.06);
-      ctx.globalAlpha = Math.min(1, this.attackSwing / 0.12);
+      ctx.rotate(this.facing * rotation);
+      ctx.globalAlpha = Math.min(1, this.attackSwing / 0.08);
       ctx.shadowColor = this.accent;
       ctx.shadowBlur = 24;
       ctx.drawImage(this.attackSprite, -width / 2, -height + 25, width, height);
