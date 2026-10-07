@@ -6,6 +6,11 @@ class Game {
     this.ctx = canvas.getContext('2d');
     this.width = canvas.width;
     this.height = canvas.height;
+    this.backgroundImage = new Image();
+    this.backgroundImage.onerror = () => {
+      console.error('Falha ao carregar a imagem de fundo:', this.backgroundImage.src);
+    };
+    this.backgroundImage.src = 'assets/backgrounds/asterion-city.png';
     this.state = 'menu';
     this.ui = new window.ORDEM.UI();
     this.dialogue = new window.ORDEM.Dialogue();
@@ -411,6 +416,19 @@ class Game {
   }
 
   drawBackground() {
+    if (this.backgroundImage.complete && this.backgroundImage.naturalWidth > 0) {
+      const scale = Math.max(
+        this.width / this.backgroundImage.naturalWidth,
+        this.height / this.backgroundImage.naturalHeight
+      );
+      const width = this.backgroundImage.naturalWidth * scale;
+      const height = this.backgroundImage.naturalHeight * scale;
+      this.ctx.drawImage(this.backgroundImage, (this.width - width) / 2, (this.height - height) / 2, width, height);
+      this.ctx.fillStyle = 'rgba(4, 8, 20, 0.12)';
+      this.ctx.fillRect(0, 0, this.width, this.height);
+      return;
+    }
+
     const sky = this.ctx.createLinearGradient(0, 0, 0, this.height);
     sky.addColorStop(0, '#090d20');
     sky.addColorStop(1, '#040810');

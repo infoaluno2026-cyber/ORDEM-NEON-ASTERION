@@ -99,6 +99,7 @@ https://infoaluno2026-cyber.github.io/ORDEM-NEON-ASTERION/
 
 - Menu principal
 - Sistema de equipe com Kael, Rio e Lira
+- Cenário ilustrado da cidade de Asterion como fundo das fases
 - Movimento, pulo, ataque e habilidades
 - Inimigos básicos, rápidos, cristalinos e de distância
 - HUD com vida, energia, cooldowns e inimigos derrotados
@@ -112,5 +113,5 @@ https://infoaluno2026-cyber.github.io/ORDEM-NEON-ASTERION/
 
 - Não há backend ou servidor obrigatório para execução.
 - Os sons são placeholders funcionais, esperando arquivos reais.
-- Os gráficos são baseados em formas e efeitos de Canvas para funcionar sem dependência externa.
+- O cenário usa uma imagem local; personagens, plataformas e efeitos continuam sendo desenhados no Canvas.
 - A estrutura foi organizada para facilitar a troca por assets pixel art e música definitiva no futuro.
