@@ -10,7 +10,7 @@ class Game {
     this.backgroundImage.onerror = () => {
       console.error('Falha ao carregar a imagem de fundo:', this.backgroundImage.src);
     };
-    this.backgroundImage.src = 'assets/backgrounds/asterion-city.png?v=asterion-background-1';
+    this.backgroundImage.src = 'assets/backgrounds/asterion-city.png?v=original-landscape-2';
     this.state = 'menu';
     this.ui = new window.ORDEM.UI();
     this.dialogue = new window.ORDEM.Dialogue();
@@ -369,8 +369,6 @@ class Game {
       this.drawIntroText();
     }
 
-    this.drawCrystals();
-
     if (this.player) {
       this.player.draw(this.ctx);
     }
@@ -416,50 +414,24 @@ class Game {
   }
 
   drawBackground() {
-    if (this.backgroundImage.complete && this.backgroundImage.naturalWidth > 0) {
-      const scale = Math.max(
-        this.width / this.backgroundImage.naturalWidth,
-        this.height / this.backgroundImage.naturalHeight
-      );
-      const width = this.backgroundImage.naturalWidth * scale;
-      const height = this.backgroundImage.naturalHeight * scale;
-      this.ctx.drawImage(this.backgroundImage, (this.width - width) / 2, (this.height - height) / 2, width, height);
-      this.ctx.fillStyle = 'rgba(4, 8, 20, 0.06)';
-      this.ctx.fillRect(0, 0, this.width, this.height);
+    if (this.backgroundImage && this.backgroundImage.complete && this.backgroundImage.naturalWidth > 0) {
+      const naturalWidth = this.backgroundImage.naturalWidth;
+      const naturalHeight = this.backgroundImage.naturalHeight;
+      const scale = Math.max(this.width / naturalWidth, this.height / naturalHeight);
+      const drawWidth = naturalWidth * scale;
+      const drawHeight = naturalHeight * scale;
+      const offsetX = (this.width - drawWidth) / 2;
+      const offsetY = (this.height - drawHeight) / 2;
+
+      this.ctx.save();
+      this.ctx.imageSmoothingEnabled = true;
+      this.ctx.drawImage(this.backgroundImage, offsetX, offsetY, drawWidth, drawHeight);
+      this.ctx.restore();
       return;
     }
 
-    const sky = this.ctx.createLinearGradient(0, 0, 0, this.height);
-    sky.addColorStop(0, '#090d20');
-    sky.addColorStop(1, '#040810');
-    this.ctx.fillStyle = sky;
+    this.ctx.fillStyle = '#050816';
     this.ctx.fillRect(0, 0, this.width, this.height);
-
-    for (let i = 0; i < 18; i++) {
-      this.ctx.fillStyle = 'rgba(125, 165, 255, 0.8)';
-      this.ctx.fillRect(i * 75 + 20, 80 + (i % 4) * 20, 2, 2);
-    }
-
-    this.ctx.fillStyle = 'rgba(14, 22, 42, 0.8)';
-    this.ctx.fillRect(0, 560, this.width, 140);
-    this.ctx.fillStyle = 'rgba(62, 95, 180, 0.75)';
-    for (let i = 0; i < 20; i++) {
-      const x = i * 70 + 18;
-      const h = 90 + (i % 4) * 26;
-      this.ctx.fillRect(x, 560 - h, 18, h);
-    }
-  }
-
-  drawCrystals() {
-    const count = 20;
-    for (let i = 0; i < count; i++) {
-      const x = (i * 67 + (this.totalTime * 18) % 200) % this.width;
-      const y = 90 + (i % 7) * 26;
-      this.ctx.fillStyle = i % 2 === 0 ? 'rgba(100, 232, 255, 0.8)' : 'rgba(183, 129, 255, 0.8)';
-      this.ctx.beginPath();
-      this.ctx.moveTo(x, y + 16); this.ctx.lineTo(x + 8, y); this.ctx.lineTo(x + 16, y + 16); this.ctx.lineTo(x + 8, y + 26); this.ctx.closePath();
-      this.ctx.fill();
-    }
   }
 
   drawIntroText() {

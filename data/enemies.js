@@ -25,18 +25,6 @@ window.ORDEM_DATA.enemyTypes = {
     attackCooldown: 0.7,
     type: 'melee'
   },
-  crystal: {
-    id: 'crystal',
-    name: 'FRATURADO CRISTALINO',
-    maxHealth: 54,
-    speed: 1.5,
-    damage: 16,
-    range: 36,
-    color: '#8adfff',
-    reward: 18,
-    attackCooldown: 1.3,
-    type: 'melee'
-  },
   ranged: {
     id: 'ranged',
     name: 'FRATURADO À DISTÂNCIA',
