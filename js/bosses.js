@@ -52,8 +52,9 @@ class Boss extends window.ORDEM.Enemy {
 
   draw(ctx) {
     if (this.dead) return;
+    const groundOffset = this.bossType === 'heart' ? 0 : this.height - 40;
     ctx.save();
-    ctx.translate(this.x, this.y);
+    ctx.translate(this.x, this.y + groundOffset);
     ctx.fillStyle = this.color;
     ctx.shadowColor = this.color;
     ctx.shadowBlur = 20;
@@ -65,9 +66,9 @@ class Boss extends window.ORDEM.Enemy {
     const barW = 220;
     const hpRatio = Math.max(0, this.health / this.maxHealth);
     ctx.fillStyle = 'rgba(0,0,0,0.7)';
-    ctx.fillRect(this.x - barW / 2, this.y - 90, barW, 10);
+    ctx.fillRect(this.x - barW / 2, this.y - 90 + groundOffset, barW, 10);
     ctx.fillStyle = '#ff647d';
-    ctx.fillRect(this.x - barW / 2, this.y - 90, barW * hpRatio, 10);
+    ctx.fillRect(this.x - barW / 2, this.y - 90 + groundOffset, barW * hpRatio, 10);
   }
 }
 

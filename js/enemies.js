@@ -132,7 +132,7 @@ class Enemy {
     if (this.dead) return;
 
     ctx.save();
-    ctx.translate(this.x, this.y);
+    ctx.translate(this.x, this.y + this.height - 28);
     ctx.fillStyle = this.color;
     ctx.shadowColor = this.color;
     ctx.shadowBlur = 14;

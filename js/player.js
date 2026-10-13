@@ -564,8 +564,21 @@ class Player {
   draw(ctx) {
     if (!this.alive) return;
 
+    const visualBottom = this.id === 'kael'
+      ? (this.attackSwing > 0 && this.attackSpriteLoaded
+        ? 25
+        : this.dashTimer > 0 && this.dashSpriteLoaded
+          ? 0
+          : this.spriteLoaded
+            ? 8
+            : 32)
+      : 28;
+    ctx.save();
+    ctx.translate(0, this.height - visualBottom);
+
     if (this.id === 'kael') {
       this.drawHeroSprite(ctx);
+      ctx.restore();
       return;
     }
 
@@ -595,6 +608,7 @@ class Player {
 
     ctx.restore();
     this.drawAttackAnimation(ctx);
+    ctx.restore();
   }
 }
 

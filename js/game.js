@@ -166,7 +166,8 @@ class Game {
     this.effects = [];
     this.enemies = [];
     this.allies = [];
-    this.player = new window.ORDEM.Player(window.ORDEM_DATA.characters.kael, 160, config.groundY - 60);
+    this.player = new window.ORDEM.Player(window.ORDEM_DATA.characters.kael, 160, 0);
+    this.player.y = config.groundY - this.player.height;
     this.player.kills = 0;
     this.state = 'playing';
     this.ui.setPauseVisible(false);
@@ -217,7 +218,8 @@ class Game {
   addAlly(characterId) {
     const data = window.ORDEM_DATA.characters[characterId];
     if (!data) return;
-    const ally = new window.ORDEM.Player(data, this.player.x + (this.allies.length + 1) * 40, this.currentLevel.groundY - 60);
+    const ally = new window.ORDEM.Player(data, this.player.x + (this.allies.length + 1) * 40, 0);
+    ally.y = this.currentLevel.groundY - ally.height;
     ally.isPlayer = false;
     ally.alive = true;
     this.allies.push(ally);
@@ -355,8 +357,7 @@ class Game {
     const level = this.currentLevel || window.ORDEM.LEVELS.station;
     const baseY = level.groundY || 620;
 
-    this.ctx.fillStyle = 'rgba(11, 17, 36, 0.42)';
-    this.ctx.fillRect(0, baseY, this.width, this.height - baseY);
+    this.drawGround(baseY);
 
     for (const platform of level.platforms || []) {
       this.ctx.fillStyle = 'rgba(137, 171, 255, 0.32)';
@@ -432,6 +433,29 @@ class Game {
 
     this.ctx.fillStyle = '#050816';
     this.ctx.fillRect(0, 0, this.width, this.height);
+  }
+
+  drawGround(groundY) {
+    const ground = this.ctx.createLinearGradient(0, groundY, 0, this.height);
+    ground.addColorStop(0, '#182338');
+    ground.addColorStop(0.16, '#0b1220');
+    ground.addColorStop(1, '#050811');
+    this.ctx.fillStyle = ground;
+    this.ctx.fillRect(0, groundY, this.width, this.height - groundY);
+
+    this.ctx.fillStyle = 'rgba(91, 232, 255, 0.65)';
+    this.ctx.fillRect(0, groundY, this.width, 2);
+    this.ctx.fillStyle = 'rgba(167, 108, 255, 0.2)';
+    this.ctx.fillRect(0, groundY + 3, this.width, 2);
+
+    this.ctx.strokeStyle = 'rgba(123, 157, 207, 0.16)';
+    this.ctx.lineWidth = 1;
+    for (let x = 80; x < this.width; x += 160) {
+      this.ctx.beginPath();
+      this.ctx.moveTo(x, groundY + 8);
+      this.ctx.lineTo(x, this.height);
+      this.ctx.stroke();
+    }
   }
 
   drawIntroText() {
