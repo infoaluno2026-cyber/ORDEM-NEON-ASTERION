@@ -5,7 +5,7 @@ const LEVEL_DEFS = {
     id: 'station',
     name: 'ESTAÇÃO ABANDONADA',
     theme: 'subway',
-    groundY: 620,
+    groundY: 660,
     bounds: { left: 0, right: 1280 },
     platforms: [],
     waves: [
@@ -20,7 +20,7 @@ const LEVEL_DEFS = {
     id: 'metro',
     name: 'METRÔ CORROMPIDO',
     theme: 'metro',
-    groundY: 620,
+    groundY: 660,
     bounds: { left: 0, right: 1280 },
     platforms: [],
     waves: [
@@ -34,7 +34,7 @@ const LEVEL_DEFS = {
     id: 'base',
     name: 'BASE DO ECLIPSE',
     theme: 'lab',
-    groundY: 620,
+    groundY: 660,
     bounds: { left: 0, right: 1280 },
     platforms: [],
     waves: [
