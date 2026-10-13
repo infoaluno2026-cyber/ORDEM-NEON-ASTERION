@@ -436,6 +436,8 @@ class Game {
   }
 
   drawGround(groundY) {
+    this.ctx.save();
+
     const ground = this.ctx.createLinearGradient(0, groundY, 0, this.height);
     ground.addColorStop(0, '#182338');
     ground.addColorStop(0.16, '#0b1220');
@@ -443,19 +445,57 @@ class Game {
     this.ctx.fillStyle = ground;
     this.ctx.fillRect(0, groundY, this.width, this.height - groundY);
 
+    this.ctx.strokeStyle = 'rgba(127, 150, 183, 0.13)';
+    this.ctx.lineWidth = 1;
+    for (const row of [22, 52, 82]) {
+      this.ctx.beginPath();
+      this.ctx.moveTo(0, groundY + row);
+      this.ctx.lineTo(this.width, groundY + row);
+      this.ctx.stroke();
+    }
+
+    for (let x = 0, panel = 0; x < this.width; x += this.width / 4, panel += 1) {
+      const seamX = x + this.width / 4 * (panel % 2 === 0 ? 0.08 : -0.06);
+      this.ctx.beginPath();
+      this.ctx.moveTo(seamX, groundY + 4);
+      this.ctx.lineTo(seamX + this.width * 0.025, groundY + 22);
+      this.ctx.lineTo(seamX - this.width * 0.018, groundY + 52);
+      this.ctx.lineTo(seamX + this.width * 0.012, this.height);
+      this.ctx.stroke();
+    }
+
+    const cracks = [
+      [[0.11, 13], [0.13, 22], [0.12, 29], [0.15, 37]],
+      [[0.43, 30], [0.41, 39], [0.44, 49], [0.42, 62]],
+      [[0.72, 16], [0.70, 25], [0.73, 34], [0.69, 43]],
+      [[0.91, 58], [0.88, 66], [0.90, 75], [0.87, 86]]
+    ];
+    this.ctx.strokeStyle = 'rgba(3, 6, 12, 0.72)';
+    this.ctx.lineWidth = 2;
+    for (const crack of cracks) {
+      this.ctx.beginPath();
+      crack.forEach(([x, y], index) => {
+        const pointX = x * this.width;
+        const pointY = groundY + y;
+        if (index === 0) this.ctx.moveTo(pointX, pointY);
+        else this.ctx.lineTo(pointX, pointY);
+      });
+      this.ctx.stroke();
+    }
+
+    this.ctx.fillStyle = 'rgba(255, 68, 82, 0.13)';
+    this.ctx.fillRect(this.width * 0.18, groundY + 10, this.width * 0.12, 2);
+    this.ctx.fillRect(this.width * 0.76, groundY + 42, this.width * 0.09, 2);
+    this.ctx.fillStyle = 'rgba(91, 205, 255, 0.12)';
+    this.ctx.fillRect(this.width * 0.49, groundY + 18, this.width * 0.1, 2);
+    this.ctx.fillRect(this.width * 0.04, groundY + 68, this.width * 0.08, 2);
+
     this.ctx.fillStyle = 'rgba(91, 232, 255, 0.65)';
     this.ctx.fillRect(0, groundY, this.width, 2);
     this.ctx.fillStyle = 'rgba(167, 108, 255, 0.2)';
     this.ctx.fillRect(0, groundY + 3, this.width, 2);
 
-    this.ctx.strokeStyle = 'rgba(123, 157, 207, 0.16)';
-    this.ctx.lineWidth = 1;
-    for (let x = 80; x < this.width; x += 160) {
-      this.ctx.beginPath();
-      this.ctx.moveTo(x, groundY + 8);
-      this.ctx.lineTo(x, this.height);
-      this.ctx.stroke();
-    }
+    this.ctx.restore();
   }
 
   drawIntroText() {
