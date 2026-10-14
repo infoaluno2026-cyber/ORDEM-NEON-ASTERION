@@ -184,6 +184,22 @@ class Player {
     this.energy = Math.min(this.maxEnergy, this.energy + 8);
     this.attackSwing = this.attackSwingDuration;
 
+    if (this.id === 'vega') {
+      window.ORDEM.projectiles.push(new window.ORDEM.Projectile({
+        x: this.x + this.facing * 24,
+        y: this.y - 28,
+        vx: this.facing * 680,
+        vy: 0,
+        radius: 6,
+        color: this.accent,
+        damage: this.attackDamage,
+        lifetime: 0.9,
+        owner: 'player'
+      }));
+      window.ORDEM.spawnEffect('spark', this.x + this.facing * 28, this.y - 28, this.color, { radius: 8, life: 0.18 });
+      return;
+    }
+
     const range = this.attackRange;
     const attackX = this.x + this.facing * (range * 0.7);
 
@@ -242,6 +258,22 @@ class Player {
         }
       }
     }
+
+    if (this.id === 'vega') {
+      for (const angle of [-0.18, 0, 0.18]) {
+        window.ORDEM.projectiles.push(new window.ORDEM.Projectile({
+          x: this.x + this.facing * 24,
+          y: this.y - 28,
+          vx: this.facing * 620,
+          vy: angle * 620,
+          radius: 9,
+          color: this.color,
+          damage: this.specialDamage,
+          lifetime: 1,
+          owner: 'player'
+        }));
+      }
+    }
   }
 
   useSecondary() {
@@ -294,6 +326,15 @@ class Player {
           }
         }
       }
+    }
+
+    if (this.id === 'vega') {
+      this.secondaryCooldown = 3;
+      this.energy -= this.secondaryCost;
+      this.secondaryActive = 0.7;
+      this.invulnerable = 0.7;
+      this.dashTimer = 0.2;
+      this.x += this.facing * this.dashPower * 8;
     }
   }
 
@@ -585,8 +626,8 @@ class Player {
     ctx.save();
     ctx.translate(this.x, this.y);
 
-    if (this.secondaryActive > 0 && this.id === 'lira') {
-      ctx.strokeStyle = 'rgba(203, 142, 255, 0.8)';
+    if (this.secondaryActive > 0 && (this.id === 'lira' || this.id === 'vega')) {
+      ctx.strokeStyle = this.id === 'lira' ? 'rgba(203, 142, 255, 0.8)' : 'rgba(82, 224, 196, 0.8)';
       ctx.lineWidth = 3;
       ctx.beginPath();
       ctx.arc(0, 15, 40 + (this.secondaryActive * 18), 0, Math.PI * 2);

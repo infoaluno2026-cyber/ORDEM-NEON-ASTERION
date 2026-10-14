@@ -59,7 +59,7 @@ https://infoaluno2026-cyber.github.io/ORDEM-NEON-ASTERION/
 - J: ataque
 - K: habilidade especial
 - L: habilidade secundária
-- 1 / 2 / 3: trocar personagem
+- 1 / 2 / 3 / 4: trocar personagem (Kael, Rio, Lira e Vega)
 - Esc: pausar
 
 ## Estrutura do projeto

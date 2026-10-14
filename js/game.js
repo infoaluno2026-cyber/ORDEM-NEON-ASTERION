@@ -57,6 +57,7 @@ class Game {
       if (key === '1') this.switchCharacter('kael');
       if (key === '2') this.switchCharacter('rio');
       if (key === '3') this.switchCharacter('lira');
+      if (key === '4') this.switchCharacter('vega');
       if (key === 'escape') {
         event.preventDefault();
         this.togglePause();
@@ -166,7 +167,11 @@ class Game {
     this.effects = [];
     this.enemies = [];
     this.allies = [];
-    this.player = new window.ORDEM.Player(window.ORDEM_DATA.characters.kael, 160, 0);
+    const savedCharacter = this.levelProgress.currentCharacter;
+    const initialCharacter = this.levelProgress.unlockedCharacters.includes(savedCharacter)
+      ? savedCharacter
+      : 'kael';
+    this.player = new window.ORDEM.Player(window.ORDEM_DATA.characters[initialCharacter], 160, 0);
     this.player.y = config.groundY - this.player.height;
     this.player.kills = 0;
     this.state = 'playing';
@@ -241,15 +246,15 @@ class Game {
 
   switchCharacter(characterId) {
     const config = window.ORDEM_DATA.characters[characterId];
-    if (!config) return;
+    if (!config || !this.player || this.player.id === characterId) return;
     if (!this.levelProgress.unlockedCharacters.includes(characterId) && characterId !== 'kael') {
       return;
     }
 
     const previous = this.player;
     const next = new window.ORDEM.Player(config, previous.x, previous.y);
-    next.health = previous.health;
-    next.energy = previous.energy;
+    next.health = Math.min(next.maxHealth, previous.health);
+    next.energy = Math.min(next.maxEnergy, previous.energy);
     next.kills = this.kills;
     this.player = next;
     this.levelProgress.currentCharacter = characterId;
@@ -565,7 +570,7 @@ class Game {
       return;
     }
     if (action === 'controls') {
-      this.ui.showMessage('A / D mover • W / SPACE pular • J atacar • K especial • L secundária • 1/2/3 trocar');
+      this.ui.showMessage('A / D mover • W / SPACE pular • J atacar • K especial • L secundária • 1-4 trocar');
       return;
     }
     if (action === 'settings') {
@@ -576,7 +581,7 @@ class Game {
       return;
     }
     if (action === 'characters') {
-      this.ui.showMessage('Kael • Rio • Lira');
+      this.ui.showMessage('Kael (1) • Rio (2) • Lira (3) • Vega (4)');
       return;
     }
     if (action === 'next-scene') {

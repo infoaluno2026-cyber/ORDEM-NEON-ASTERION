@@ -78,5 +78,31 @@ window.ORDEM_DATA.characters = {
     attackCooldown: 0.42,
     specialCooldown: 3.4,
     specialType: 'barrier'
+  },
+  vega: {
+    id: 'vega',
+    name: 'VEGA',
+    title: 'Arqueira dos Cristais',
+    aura: 'Turquesa',
+    weapon: 'Arco Prismático',
+    maxHealth: 105,
+    maxEnergy: 115,
+    speed: 4.8,
+    jumpForce: 12.8,
+    attackDamage: 11,
+    attackRange: 600,
+    specialDamage: 24,
+    specialCost: 38,
+    secondaryCost: 20,
+    specialName: 'SALVA PRISMÁTICA',
+    secondaryName: 'PASSO ESPECTRAL',
+    color: '#52e0c4',
+    accent: '#b4fff0',
+    portrait: 'V',
+    icon: 'V',
+    dashPower: 10,
+    attackCooldown: 0.48,
+    specialCooldown: 3,
+    specialType: 'volley'
   }
 };

@@ -6,7 +6,7 @@ window.ORDEM = window.ORDEM || {};
   function defaultState() {
     return {
       unlockedLevels: ['station'],
-      unlockedCharacters: ['kael'],
+      unlockedCharacters: ['kael', 'vega'],
       currentCharacter: 'kael',
       settings: {
         sound: true,
@@ -25,10 +25,15 @@ window.ORDEM = window.ORDEM || {};
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return defaultState();
       const parsed = JSON.parse(raw);
-      return Object.assign(defaultState(), parsed, {
+      const state = Object.assign(defaultState(), parsed, {
         settings: Object.assign(defaultState().settings, parsed.settings || {}),
         stats: Object.assign(defaultState().stats, parsed.stats || {})
       });
+      state.unlockedCharacters = Array.from(new Set([
+        ...(Array.isArray(state.unlockedCharacters) ? state.unlockedCharacters : ['kael']),
+        'vega'
+      ]));
+      return state;
     } catch (error) {
       return defaultState();
     }
